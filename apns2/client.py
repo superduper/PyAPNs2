@@ -36,7 +36,8 @@ class APNsClient(object):
     ALTERNATIVE_PORT = 2197
 
     def __init__(self, credentials, use_sandbox=False, use_alternative_port=False, proto=None, json_encoder=None,
-                 password=None, proxy_host=None, proxy_port=None, heartbeat_period=None):
+                 password=None, proxy_host=None, proxy_port=None, heartbeat_period=None, logger=logger):
+	self.logger = logger
         if credentials is None or isinstance(credentials, str):
             self.__credentials = CertificateCredentials(credentials, password)
         else:
@@ -125,7 +126,7 @@ class APNsClient(object):
                     return data['reason']
 
     def send_notification_batch(self, notifications, topic=None, priority=NotificationPriority.Immediate,
-                                expiration=None, collapse_id=None):
+                                expiration=None, collapse_id=None, logger=None):
         """
         Send a notification to a list of tokens in batch. Instead of sending a synchronous request
         for each token, send multiple requests concurrently. This is done on the same connection,
@@ -144,7 +145,7 @@ class APNsClient(object):
         # Make sure we're connected to APNs, so that we receive and process the server's SETTINGS
         # frame before starting to send notifications.
         self.connect()
-
+	logger = logger or self.logger
         results = {}
         open_streams = collections.deque()
         # Loop on the tokens, sending as many requests as possible concurrently to APNs.
@@ -183,6 +184,8 @@ class APNsClient(object):
         # The max_concurrent_streams value is saved in the H2Connection instance that must be
         # accessed using a with statement in order to acquire a lock.
         # pylint: disable=protected-access
+	logger = self.logger
+
         with self._connection._conn as connection:
             max_concurrent_streams = connection.remote_settings.max_concurrent_streams
 
@@ -209,6 +212,7 @@ class APNsClient(object):
         Establish a connection to APNs. If already connected, the function does nothing. If the
         connection fails, the function retries up to MAX_CONNECTION_RETRIES times.
         """
+	logger = self.logger
         retries = 0
         while retries < MAX_CONNECTION_RETRIES:
             try:
@@ -222,3 +226,4 @@ class APNsClient(object):
                 logger.exception('Failed connecting to APNs (attempt %s of %s)', retries, MAX_CONNECTION_RETRIES)
 
         raise ConnectionFailed()
+
