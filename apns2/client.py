@@ -37,7 +37,7 @@ class APNsClient(object):
 
     def __init__(self, credentials, use_sandbox=False, use_alternative_port=False, proto=None, json_encoder=None,
                  password=None, proxy_host=None, proxy_port=None, heartbeat_period=None, logger=logger):
-    self.logger = logger
+        self.logger = logger
         if credentials is None or isinstance(credentials, str):
             self.__credentials = CertificateCredentials(credentials, password)
         else:
@@ -226,4 +226,3 @@ class APNsClient(object):
                 logger.exception('Failed connecting to APNs (attempt %s of %s)', retries, MAX_CONNECTION_RETRIES)
 
         raise ConnectionFailed()
-
