@@ -7,7 +7,7 @@ from enum import Enum
 from threading import Thread
 
 from .errors import ConnectionFailed, exception_class_for_reason
-from .misc import LoggingAdapter
+from .misc import LoggerAdapter
 
 # We don't generally need to know about the Credentials subclasses except to
 # keep the old API, where APNsClient took a cert_file
