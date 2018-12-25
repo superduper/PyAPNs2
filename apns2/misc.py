@@ -16,5 +16,5 @@ class LoggerAdapter(logging.LoggerAdapter):
         Normally, you'll only need to override this one method in a
         LoggerAdapter subclass for your specific needs.
         """
-        kwargs["extra"] = dict(self.extra, **(kwargs["extra"] or {}))
+        kwargs["extra"] = dict(self.extra, **(kwargs.get("extra", {})))
         return msg, kwargs
