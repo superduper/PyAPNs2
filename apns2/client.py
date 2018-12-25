@@ -37,7 +37,7 @@ class APNsClient(object):
 
     def __init__(self, credentials, use_sandbox=False, use_alternative_port=False, proto=None, json_encoder=None,
                  password=None, proxy_host=None, proxy_port=None, heartbeat_period=None, logger=logger):
-	self.logger = logger
+    self.logger = logger
         if credentials is None or isinstance(credentials, str):
             self.__credentials = CertificateCredentials(credentials, password)
         else:
@@ -145,7 +145,7 @@ class APNsClient(object):
         # Make sure we're connected to APNs, so that we receive and process the server's SETTINGS
         # frame before starting to send notifications.
         self.connect()
-	logger = logger or self.logger
+        logger = logger or self.logger
         results = {}
         open_streams = collections.deque()
         # Loop on the tokens, sending as many requests as possible concurrently to APNs.
@@ -184,7 +184,7 @@ class APNsClient(object):
         # The max_concurrent_streams value is saved in the H2Connection instance that must be
         # accessed using a with statement in order to acquire a lock.
         # pylint: disable=protected-access
-	logger = self.logger
+        logger = self.logger
 
         with self._connection._conn as connection:
             max_concurrent_streams = connection.remote_settings.max_concurrent_streams
@@ -212,7 +212,7 @@ class APNsClient(object):
         Establish a connection to APNs. If already connected, the function does nothing. If the
         connection fails, the function retries up to MAX_CONNECTION_RETRIES times.
         """
-	logger = self.logger
+        logger = self.logger
         retries = 0
         while retries < MAX_CONNECTION_RETRIES:
             try:
