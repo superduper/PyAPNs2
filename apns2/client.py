@@ -163,7 +163,7 @@ class APNsClient(object):
             raw_data = response.read().decode('utf-8')
             logger.debug(
                 'Received response from APNS(status=%r, raw_data=%s)',
-                status,
+                response.status,
                 raw_data,
                 extra={
                     'apns2:notification_result': {
